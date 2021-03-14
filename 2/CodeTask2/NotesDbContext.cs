@@ -1,20 +1,23 @@
 using CodeTask2.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace CodeTask2
 {
     public class NotesDbContext : DbContext
     {
-        public NotesDbContext(DbContextOptions<NotesDbContext> options)
+        private IConfiguration _configuration;
+        public NotesDbContext(IConfiguration configuration, DbContextOptions<NotesDbContext> options)
             : base(options)
         {
+            _configuration = configuration;
         }
         
         public DbSet<Note> Notes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("User ID=morrison;Password=1234;Server=localhost;Port=5432;Database=task2Db;Integrated Security=true;Pooling=true;");
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"));
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CodeTask2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace CodeTask2.Controllers
@@ -14,9 +15,11 @@ namespace CodeTask2.Controllers
     public class NotesController : ControllerBase
     {
         private readonly NotesDbContext _context;
-        public NotesController(NotesDbContext dbContext)
+        private readonly IConfiguration _configuration;
+        public NotesController(IConfiguration configuration, NotesDbContext dbContext)
         {
             _context = dbContext;
+            _configuration = configuration;
         }
 
         [Route(""), HttpGet]
@@ -104,11 +107,12 @@ namespace CodeTask2.Controllers
 
         private List<Note> ReplaceTitle(List<Note> notes)
         {
+            var configN = _configuration.GetValue<int>("ConfigSection:ReplaceTitleN");
             foreach (var note in notes)
             {
                 if (string.IsNullOrEmpty(note.Title))
                 {
-                    note.Title = note.Content.Substring(0,  Math.Min(note.Content.Length, ConfigFile.N));
+                    note.Title = note.Content.Substring(0,  Math.Min(note.Content.Length, configN));
                 }
             }
 
