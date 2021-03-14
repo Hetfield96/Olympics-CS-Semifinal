@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace CodeTask2
 {
@@ -30,6 +31,9 @@ namespace CodeTask2
             
             services.AddDbContext<NotesDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddSwaggerGen(c => 
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "MyApi", Version = "v1"}));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +45,10 @@ namespace CodeTask2
             }
 
             app.UseRouting();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => 
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Api V1"));
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

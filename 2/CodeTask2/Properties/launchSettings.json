@@ -18,6 +18,8 @@
     "CodeTask2": {
       "commandName": "Project",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
